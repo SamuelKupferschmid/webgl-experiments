@@ -1,6 +1,6 @@
 import {Mat4} from "./math/Mat4";
 
-export class MvpProgram {
+export class ShaderProgram {
     private _context: WebGLRenderingContext;
     private _program: WebGLProgram;
 

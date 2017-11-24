@@ -1,19 +1,18 @@
-import * as FragmentShader from './shaders/main.frag';
-import * as VertexShader from './shaders/main.vert';
+import * as FragmentShader from '../shaders/main.frag';
+import * as VertexShader from '../shaders/main.vert';
 
-import {Mat4} from "./math/Mat4";
 import {BaseScene} from "./BaseScene";
-import {VerticesUtils} from "./VerticesUtils";
-import {MvpProgram} from "./MvpProgram";
+import {VerticesUtils} from "../VerticesUtils";
+import {ShaderProgram} from "../ShaderProgram";
 
-export class Boomerang extends BaseScene {
+export class BoomerangScene extends BaseScene {
 
-    private _program: MvpProgram;
+    private _program: ShaderProgram;
     private boomerang: Float32Array;
 
     constructor(context: WebGLRenderingContext) {
         super(context);
-        this._program = new MvpProgram(context, VertexShader, FragmentShader);
+        this._program = new ShaderProgram(context, VertexShader, FragmentShader);
         this._program.use();
         this.boomerang = new Float32Array(VerticesUtils.createCirlcePoints(8));
 

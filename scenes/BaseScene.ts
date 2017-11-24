@@ -1,17 +1,17 @@
-import * as FragmentShader from './shaders/main.frag';
-import * as VertexShader from './shaders/main.vert';
+import * as FragmentShader from '../shaders/main.frag';
+import * as VertexShader from '../shaders/main.vert';
 
-import {Mat4} from "./math/Mat4";
-import {MvpProgram} from "./MvpProgram";
+import {Mat4} from "../math/Mat4";
+import {ShaderProgram} from "../ShaderProgram";
 
 export abstract class BaseScene {
     protected _context: WebGLRenderingContext;
-    private _world: MvpProgram;
+    private _world: ShaderProgram;
 
     protected uColor: WebGLUniformLocation | any;
     constructor(context: WebGLRenderingContext) {
         this._context = context;
-        this._world = new MvpProgram(context, VertexShader, FragmentShader);
+        this._world = new ShaderProgram(context, VertexShader, FragmentShader);
         this._world.use();
 
         let triangleVertexPositionBuffer = this._context.createBuffer();
