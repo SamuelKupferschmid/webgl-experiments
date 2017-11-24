@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+<canvas width="800" height="800"></canvas>
+<div><span id="fps"></span><span> fps</span></div>
+</body>
+<script src="systemjs/dist/system.js"></script>
+<script>
+    System.config({
+        packages: {
+            '.': {
+                defaultExtension: 'js',
+                meta: {
+                    '*.vert': {
+                        loader: 'text'
+                    },
+                    '*.frag': {
+                        loader: 'text'
+                    }
+                }
+            }
+        },
+        map: {
+            text: 'systemjs/text-plugin/text.js'
+        }
+    });
+    SystemJS.import('App');
+</script>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "webgl-experiments",
+  "version": "0.0.1",
+  "dependencies": {},
+  "scripts": {
+    "start": "concurrently \"tsc -w\" \"http-server -p 80\""
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.1",
+    "http-server": "^0.10.0"
+  }
+}
