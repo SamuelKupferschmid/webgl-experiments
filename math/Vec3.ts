@@ -78,16 +78,9 @@ export class Vec3 {
         return new Vec3(this.x / l, this.y / l, this.z / l);
     }
 
-    public dot(a: Vec3) {
-        return MathUtil.dot(this.x, this.y, this.z, a.x, a.y, a.z);
-    }
-
     public cross(a: Vec3) {
         return new Vec3(this.y * a.z - this.z * a.y, this.z * a.x - this.x * a.z, this.x * a.y - this.y * a.x);
     }
 
-    public toArray() {
-        return [this.x, this.y, this.z
-    };
-}
+    public toArray = () => [this.x, this.y, this.z];
 }

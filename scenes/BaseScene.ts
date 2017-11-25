@@ -24,7 +24,7 @@ export abstract class BaseScene {
 
         this.onResize(canvas.width, canvas.height);
 
-        canvas.addEventListener('resize', () => {
+        window.addEventListener('resize', () => {
             requestAnimationFrame(() => {
                 this.onResize(canvas.width, canvas.height);
             });
@@ -61,8 +61,5 @@ export abstract class BaseScene {
 
         this.pMatrix = Mat4.perspective2(Math.PI / 3, aspect, 1 , 1000);
         //this.pMatrix = Mat4.perspective(left, right, top, bottom, this.near, this.far);
-    }
-
-    drawWorld() {
     }
 }

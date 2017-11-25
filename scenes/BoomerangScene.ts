@@ -20,7 +20,7 @@ export class BoomerangScene extends BaseScene {
     private rotationDuration = 300;
 
     private a = new Vec3(0, 4, 0); // Camera Position
-    private b = new Vec3(0, 0, 0); // Look At
+    private b = new Vec3(0, 0, 2); // Look At
     private up = new Vec3(0, 1, 1); // up
 
     constructor(canvas: HTMLCanvasElement) {

@@ -1,3 +1,6 @@
+import * as FragmentShader from '../shaders/main.frag';
+import * as VertexShader from '../shaders/main.vert';
+
 import {Mat4} from "./math/Mat4";
 
 export class ShaderProgram {
@@ -69,5 +72,13 @@ export class ShaderProgram {
 
         this._context.attachShader(program,shader);
 
+    }
+
+    public static get DEFAULT_VSHADER(): string {
+        return VertexShader;
+    }
+
+    public static get DEFAULT_FSHADER(): string {
+        return FragmentShader;
     }
 }
