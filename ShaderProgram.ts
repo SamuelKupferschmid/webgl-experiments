@@ -54,6 +54,10 @@ export class ShaderProgram {
         this._context.uniformMatrix4fv(this.uProjection, false, matrix.toArray());
     }
 
+    public setColor(r:number, g: number, b:number, a:number) {
+        this._context.uniform4fv(this.uColor, [r,g,b,a]);
+    }
+
     private setShader(source: string, program: WebGLProgram, type: number) {
         let shader = this._context.createShader(type);
         this._context.shaderSource(shader, source);

@@ -54,7 +54,7 @@ export class Vec3 {
         this._z = z;
     }
 
-    public length = () => Math.sqrt(Math.pow(this._x,2) + Math.pow(this._y,2) + Math.pow(this._z,2));
+    public length = () => Math.sqrt(Math.pow(this._x, 2) + Math.pow(this._y, 2) + Math.pow(this._z, 2));
 
     public subtract = (v: Vec3) => new Vec3(this.x - v.x, this.y - v.y, this.z - v.z);
 
@@ -63,122 +63,31 @@ export class Vec3 {
     public add = (vec: Vec3) => new Vec3(this.x + vec.x, this.y + vec.y, this.z + vec.z);
 
 
-
-public
-Vec3
-scale(float
-s
-)
-{
-    return new Vec3(x * s, y * s, z * s);
-}
-
-public
-Vec3
-negate()
-{
-    return scale(-1);
-}
-
-public
-Vec3
-normalize()
-{
-    float
-    l = length();
-    if (MathUtil.isZero(l) || l == 1)
-        return this;
-    return new Vec3(x / l, y / l, z / l);
-}
-
-public
-float
-dot(Vec3
-a
-)
-{
-    return MathUtil.dot(x, y, z, a.x, a.y, a.z);
-}
-
-public
-Vec3
-cross(Vec3
-a
-)
-{
-    return new Vec3(y * a.z - z * a.y, z * a.x - x * a.z, x * a.y - y * a.x);
-}
-
-@Override
-public
-boolean
-equals(Object
-obj
-)
-{
-    if (this == obj) {
-        return true;
+    public scale(s) {
+        return new Vec3(this.x * s, this.y * s, this.z * s);
     }
 
-    if (obj instanceof Vec3) {
-        final
-        Vec3
-        v = (Vec3)
-        obj;
-        return (x == v.x) && (y == v.y) && (z == v.z);
+    public negate() {
+        return this.scale(-1);
     }
-    return false;
-}
 
-@Override
-public
-Vec3
-toVec3()
-{
-    return this;
-}
-
-@Override
-public
-float[]
-toArray()
-{
-    return new float[]
-    {
-        x, y, z
+    public normalize() {
+        let l = this.length();
+        if (l == 1)
+            return this;
+        return new Vec3(this.x / l, this.y / l, this.z / l);
     }
-    ;
-}
 
-@Override
-public
-String
-toString()
-{
-    return String.format("[% .2f,% .2f,% .2f]", x, y, z);
-}
-
-public static
-float[]
-toArray(List < ?
-extends
-Vec3 > vectors
-)
-{
-    if (vectors == null)
-        return null;
-
-    float[]
-    result = new float[vectors.size() * 3];
-    int
-    i = 0;
-    for (Vec3 v : vectors
-)
-    {
-        result[i++] = v.x;
-        result[i++] = v.y;
-        result[i++] = v.z;
+    public dot(a: Vec3) {
+        return MathUtil.dot(this.x, this.y, this.z, a.x, a.y, a.z);
     }
-    return result;
+
+    public cross(a: Vec3) {
+        return new Vec3(this.y * a.z - this.z * a.y, this.z * a.x - this.x * a.z, this.x * a.y - this.y * a.x);
+    }
+
+    public toArray() {
+        return [this.x, this.y, this.z
+    };
 }
 }

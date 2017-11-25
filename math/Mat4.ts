@@ -1,3 +1,5 @@
+import {Vec3} from "./Vec3";
+
 export class Mat4 {
     private m00: number;
     private m10: number;
@@ -117,6 +119,8 @@ export class Mat4 {
 
     public rotate = (angle, x, y, z) => Mat4.rotate(angle, x, y, z).multiply(this);
 
+    public translate = (tx, ty, tz) => Mat4.translate(tx, ty, tz).multiply(this);
+
     public static perspective(left, right,
                               bottom, top, near, far): Mat4 {
         let m00 = 2 * near / (right - left);
@@ -127,6 +131,16 @@ export class Mat4 {
         let m32 = -1;
         let m23 = -2 * far * near / (far - near);
         return new Mat4(m00, 0, 0, 0, 0, m11, 0, 0, m02, m12, m22, m32, 0, 0, m23, 0);
+    }
+
+    public static perspective2(fieldOfViewInRadians, aspect, near, far): Mat4 {
+        let f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians);
+        let rangeInv = 1.0 / (near - far);
+
+        return new Mat4(f / aspect, 0, 0, 0,
+            0, f, 0, 0,
+            0, 0, (near + far) * rangeInv, -1,
+            0, 0, near * far * rangeInv * 2, 0);
     }
 
     public static ortho(left, right,
@@ -147,13 +161,13 @@ export class Mat4 {
         return new Mat4(m00, 0, 0, 0, 0, m11, 0, 0, 0, 0, m22, 0, m03, m13, m23, m33);
     }
 
-    transform(vec) {
+    /*transform(vec) {
         let x = this.m00 * vec.x + this.m01 * vec.y + this.m02 * vec.z + this.m03 * vec.w;
         let y = this.m10 * vec.x + this.m11 * vec.y + this.m12 * vec.z + this.m13 * vec.w;
         let z = this.m20 * vec.x + this.m21 * vec.y + this.m22 * vec.z + this.m23 * vec.w;
         let w = this.m30 * vec.x + this.m31 * vec.y + this.m32 * vec.z + this.m33 * vec.w;
         return new Vec4(x, y, z, w);
-    }
+    }*/
 
     multiply(mat: Mat4) {
         let m00 = this.m00 * mat.m00 + this.m01 * mat.m10 + this.m02 * mat.m20 + this.m03 * mat.m30;

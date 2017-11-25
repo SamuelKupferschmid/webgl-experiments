@@ -1,49 +1,44 @@
 import * as FragmentShader from '../shaders/main.frag';
 import * as VertexShader from '../shaders/main.vert';
 
-import {Mat4} from "../math/Mat4";
 import {ShaderProgram} from "../ShaderProgram";
+import {Mat4} from "../math/Mat4";
 
 export abstract class BaseScene {
+
+    private near = -10;
+    private far = 1000;
+
     protected _context: WebGLRenderingContext;
     private _world: ShaderProgram;
 
     protected uColor: WebGLUniformLocation | any;
-    constructor(context: WebGLRenderingContext) {
-        this._context = context;
-        this._world = new ShaderProgram(context, VertexShader, FragmentShader);
-        this._world.use();
+    protected _canvas: HTMLCanvasElement;
 
-        let triangleVertexPositionBuffer = this._context.createBuffer();
+    protected vMatrix: Mat4;
+    protected pMatrix: Mat4;
 
-        let vertices = [
-            0, 0, 0,
-            1, 0, 0,
-            0, 0, 0,
-            0, 1, 0,
-            0, 0, 0,
-            0, 0, 1
-        ];
+    constructor(canvas: HTMLCanvasElement) {
+        this._context = canvas.getContext("webgl");
+        this._canvas = canvas;
 
-        this._context.bindBuffer(this._context.ARRAY_BUFFER, triangleVertexPositionBuffer);
-        this._context.bufferData(this._context.ARRAY_BUFFER, new Float32Array(vertices), this._context.STATIC_DRAW);
-        this._context.vertexAttribPointer(this._world.aPosition, 3, this._context.FLOAT, false, 0, 0);
+        this.onResize(canvas.width, canvas.height);
 
-        this._context.bindBuffer(this._context.ARRAY_BUFFER, triangleVertexPositionBuffer);
-
-        this._context.bufferData(this._context.ARRAY_BUFFER, new Float32Array(vertices), this._context.STATIC_DRAW);
-
-        this._context.enableVertexAttribArray(this._world.aPosition);
+        canvas.addEventListener('resize', () => {
+            requestAnimationFrame(() => {
+                this.onResize(canvas.width, canvas.height);
+            });
+        }, false);
     }
 
-    public run(fpsCb : Function) {
+    public run(fpsCb: Function) {
         let frame = 0;
         let msStart = Date.now();
         let lastTick = 0;
         let anim = () => {
             let msDuration = Date.now() - msStart;
 
-            if(frame % 20 == 0) {
+            if (frame % 20 == 0) {
                 let fps = 1000 / (msDuration - lastTick);
                 fpsCb(fps);
             }
@@ -59,11 +54,15 @@ export abstract class BaseScene {
 
     protected abstract drawFrame(frame: number, msDuration: number);
 
-    drawWorld() {
-        let gl = this._context;
-        this._world.use();
+    protected onResize(width: number, height: number) {
+        this._context.viewport(0, 0, width, height);
 
-        gl.uniform4fv(this.uColor, [0.2, 1, 1, 1]);
-        gl.drawArrays(gl.LINES, 0, 6);
+        let aspect = width / height;
+
+        this.pMatrix = Mat4.perspective2(Math.PI / 3, aspect, 1 , 1000);
+        //this.pMatrix = Mat4.perspective(left, right, top, bottom, this.near, this.far);
+    }
+
+    drawWorld() {
     }
 }

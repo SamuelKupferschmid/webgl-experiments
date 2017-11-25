@@ -8,12 +8,26 @@
             margin: 0;
             padding: 0;
             background-color: #fff;
+            overflow: hidden;
         }
+
+        canvas {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .info {
+            margin: 2px;
+            position: fixed;
+            bottom: 0px;
+        }
+
     </style>
 </head>
 <body>
 <canvas width="800" height="800"></canvas>
-<div><span id="fps"></span><span> fps</span></div>
+<div class="info"><span id="fps"></span><span> fps</span></div>
 </body>
 <script src="systemjs/dist/system.js"></script>
 <script>
@@ -27,12 +41,16 @@
                     },
                     '*.frag': {
                         loader: 'text'
+                    },
+                    '*.json': {
+                        loader: 'json'
                     }
                 }
             }
         },
         map: {
-            text: 'systemjs/text-plugin/text.js'
+            text: 'systemjs/text-plugin/text.js',
+            json: 'systemjs/json-plugin/json.js'
         }
     });
     SystemJS.import('App');
