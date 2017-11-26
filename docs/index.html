@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            overflow: hidden;
+        }
+
+        canvas {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .info {
+            margin: 2px;
+            position: fixed;
+            bottom: 0;
+        }
+
+        .toggle{
+            margin: 5px;
+            position: absolute;
+            z-index: 100;
+        }
+
+    </style>
+</head>
+<body>
+<div class="toggle"><button id="toggle-button">Zwischen Boomerang und Zylinder wechseln</button> </div>
+<canvas width="800" height="800"></canvas>
+<div class="info"><span id="fps"></span><span> fps</span></div>
+</body>
+<script src="systemjs/dist/system.js"></script>
+<script>
+    System.config({
+        packages: {
+            '.': {
+                defaultExtension: 'js',
+                meta: {
+                    '*.vert': {
+                        loader: 'text'
+                    },
+                    '*.frag': {
+                        loader: 'text'
+                    },
+                    '*.json': {
+                        loader: 'json'
+                    }
+                }
+            }
+        },
+        map: {
+            text: 'systemjs/text-plugin/text.js',
+            json: 'systemjs/json-plugin/json.js'
+        }
+    });
+    SystemJS.import('App');
+</script>
+</html>
