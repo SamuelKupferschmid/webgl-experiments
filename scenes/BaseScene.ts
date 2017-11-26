@@ -5,7 +5,7 @@ import {ShaderProgram} from "../ShaderProgram";
 import {Mat4} from "../math/Mat4";
 
 export abstract class BaseScene {
-
+    private nextAnimFrame: number;
     private near = -10;
     private far = 1000;
 
@@ -24,14 +24,11 @@ export abstract class BaseScene {
 
         this.onResize(canvas.width, canvas.height);
 
-        window.addEventListener('resize', () => {
-            requestAnimationFrame(() => {
-                this.onResize(canvas.width, canvas.height);
-            });
-        }, false);
+        window.addEventListener('resize', this.onResizeFramed,false);
     }
 
     public run(fpsCb: Function) {
+        this.isRunning = true;
         let frame = 0;
         let msStart = Date.now();
         let lastTick = 0;
@@ -46,20 +43,31 @@ export abstract class BaseScene {
             this.drawFrame(frame++, msDuration);
 
             lastTick = msDuration;
-            requestAnimationFrame(anim);
+            this.nextAnimFrame = requestAnimationFrame(anim);
         };
 
-        requestAnimationFrame(anim);
+        this.nextAnimFrame = requestAnimationFrame(anim);
+    }
+
+    public stop() {
+        cancelAnimationFrame(this.nextAnimFrame);
+        window.removeEventListener('resize',this.onResizeFramed)
     }
 
     protected abstract drawFrame(frame: number, msDuration: number);
+
+    private onResizeFramed = () => {
+        requestAnimationFrame(() => {
+            this.onResize(this._canvas.width, this._canvas.height);
+        });
+    };
 
     protected onResize(width: number, height: number) {
         this._context.viewport(0, 0, width, height);
 
         let aspect = width / height;
 
-        this.pMatrix = Mat4.perspective2(Math.PI / 3, aspect, 1 , 1000);
+        this.pMatrix = Mat4.perspective2(Math.PI / 3, aspect, 1, 1000);
         //this.pMatrix = Mat4.perspective(left, right, top, bottom, this.near, this.far);
     }
 }
