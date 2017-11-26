@@ -36,9 +36,11 @@
 <canvas width="800" height="800"></canvas>
 <div class="info"><span id="fps"></span><span> fps</span></div>
 </body>
-<script src="systemjs/dist/system.js"></script>
+<script src="http://cdn.rawgit.com/samuelkupferschmid/webgl-experiments/master/systemjs/dist/system.js" type="application/javascript"></script>
 <script>
     System.config({
+        baseURL : 'http://cdn.rawgit.com/samuelkupferschmid/webgl-experiments/master',
+        defaultExtension: 'js',
         packages: {
             '.': {
                 defaultExtension: 'js',
@@ -60,6 +62,6 @@
             json: 'systemjs/json-plugin/json.js'
         }
     });
-    SystemJS.import('App');
+    SystemJS.import('App.js');
 </script>
 </html>
