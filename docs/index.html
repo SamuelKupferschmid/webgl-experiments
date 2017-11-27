@@ -39,22 +39,21 @@
 <script src="http://cdn.rawgit.com/samuelkupferschmid/webgl-experiments/master/systemjs/dist/system.js" type="application/javascript"></script>
 <script>
     System.config({
-        baseURL : 'http://cdn.rawgit.com/samuelkupferschmid/webgl-experiments/master',
-        defaultExtension: 'js',
+        baseURL : 'https://raw.githubusercontent.com/SamuelKupferschmid/webgl-experiments/master/docs/',
         packages: {
-            '.': {
-                defaultExtension: 'js',
-                meta: {
-                    '*.vert': {
-                        loader: 'text'
-                    },
-                    '*.frag': {
-                        loader: 'text'
-                    },
-                    '*.json': {
-                        loader: 'json'
-                    }
-                }
+            'https://raw.githubusercontent.com/SamuelKupferschmid/webgl-experiments/master/docs/': {
+                defaultExtension: 'js'
+            }
+        },
+        meta: {
+            '*.vert': {
+                loader: 'text'
+            },
+            '*.frag': {
+                loader: 'text'
+            },
+            '*.json': {
+                loader: 'json'
             }
         },
         map: {
