@@ -11,7 +11,7 @@ var BaseScene = /** @class */ (function () {
                 _this.onResize(_this._canvas.width, _this._canvas.height);
             });
         };
-        this._context = canvas.getContext("webgl");
+        this._context = BaseScene.create3DContext(canvas);
         this._canvas = canvas;
         this.onResize(canvas.width, canvas.height);
         window.addEventListener('resize', this.onResizeFramed, false);
@@ -43,6 +43,20 @@ var BaseScene = /** @class */ (function () {
         var aspect = width / height;
         this.pMatrix = Mat4_1.Mat4.perspective2(Math.PI / 3, aspect, 1, 1000);
         //this.pMatrix = Mat4.perspective(left, right, top, bottom, this.near, this.far);
+    };
+    BaseScene.create3DContext = function (canvas) {
+        var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+        var context = null;
+        for (var ii = 0; ii < names.length; ++ii) {
+            try {
+                context = canvas.getContext(names[ii]);
+            }
+            catch (e) { }
+            if (context) {
+                break;
+            }
+        }
+        return context;
     };
     return BaseScene;
 }());

@@ -10,7 +10,6 @@ export abstract class BaseScene {
     private far = 1000;
 
     protected _context: WebGLRenderingContext;
-    private _world: ShaderProgram;
 
     protected uColor: WebGLUniformLocation | any;
     protected _canvas: HTMLCanvasElement;
@@ -19,7 +18,7 @@ export abstract class BaseScene {
     protected pMatrix: Mat4;
 
     constructor(canvas: HTMLCanvasElement) {
-        this._context = canvas.getContext("webgl");
+        this._context = BaseScene.create3DContext(canvas);
         this._canvas = canvas;
 
         this.onResize(canvas.width, canvas.height);
@@ -69,5 +68,19 @@ export abstract class BaseScene {
 
         this.pMatrix = Mat4.perspective2(Math.PI / 3, aspect, 1, 1000);
         //this.pMatrix = Mat4.perspective(left, right, top, bottom, this.near, this.far);
+    }
+
+    private static create3DContext(canvas: HTMLCanvasElement) {
+        let names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+        let context = null;
+        for (let ii = 0; ii < names.length; ++ii) {
+            try {
+                context = canvas.getContext(names[ii]);
+            } catch(e) {}
+            if (context) {
+                break;
+            }
+        }
+        return context;
     }
 }
