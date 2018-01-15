@@ -15,21 +15,7 @@ var scenes = {
     "Cylinder Streaming": CylinderStreaming_1.CylinderStreaming,
     "Flying Cuboids": FlyingCuboidsScene_1.FlyingCuboidsScene
 };
-//let scene = new BoomerangScene(canvas);
 var scene;
-function toogleScene() {
-    if (scene != null)
-        scene.stop();
-    if (scene instanceof BoomerangScene_1.BoomerangScene) {
-        scene = new CylinderStreaming_1.CylinderStreaming(canvas);
-    }
-    else {
-        scene = new BoomerangScene_1.BoomerangScene(canvas);
-    }
-    scene.run(function (fps) {
-        fpsLabel.innerText = fps.toFixed(0);
-    });
-}
 window.addEventListener('resize', function () {
     updateCanvasSize();
 }, false);
@@ -45,13 +31,14 @@ var onHashchange = function (url) {
     if (scene != null)
         scene.stop();
     var match = url.match(/#(.*)/);
-    var type = match == null ? BoomerangScene_1.BoomerangScene : scenes[decodeURI(match[1])];
+    var type = match == null ? FlyingCuboidsScene_1.FlyingCuboidsScene : scenes[decodeURI(match[1])];
     scene = new type(canvas);
     scene.run(function (fps) {
         fpsLabel.innerText = fps.toFixed(0);
     });
 };
 window.addEventListener('hashchange', function (ev) {
-    onHashchange(ev.newURL);
+    onHashchange(document.location.href);
 });
+onHashchange("");
 //# sourceMappingURL=App.js.map

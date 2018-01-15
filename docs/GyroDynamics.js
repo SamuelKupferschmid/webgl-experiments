@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Dynamics_1 = require("./Dynamics");
 var Vec3_1 = require("./math/Vec3");
+var Quaternion_1 = require("./math/Quaternion");
 var GyroDynamics = /** @class */ (function () {
     function GyroDynamics(i1, i2, i3) {
         this._i1 = i1;
@@ -23,28 +24,25 @@ var GyroDynamics = /** @class */ (function () {
     Object.defineProperty(GyroDynamics.prototype, "state", {
         get: function () {
             return {
-                w1: this._x[0],
-                w2: this._x[1],
-                w3: this._x[2],
-                phi: 2 * Math.acos(this._x[3]) * 180 / Math.PI,
-                x: this._x[4],
-                y: this._x[5],
-                z: this._x[6]
+                w1: this._state[0],
+                w2: this._state[1],
+                w3: this._state[2],
+                quaternion: new Quaternion_1.Quaternion(2 * Math.acos(this._state[3]) * 180 / Math.PI, this._state[4], this._state[5], this._state[6])
             };
         },
         set: function (state) {
-            var q0 = Math.cos(0.5 * state.phi * Math.PI / 180);
-            var n = new Vec3_1.Vec3(state.x, state.y, state.z);
+            var q0 = Math.cos(0.5 * state.quaternion.q0 * Math.PI / 180);
+            var n = new Vec3_1.Vec3(state.quaternion.q1, state.quaternion.q2, state.quaternion.q3);
             n = n.normalize();
-            var s = Math.sin(0.5 * state.phi * Math.PI / 180);
-            this._x = [state.w1, state.w2, state.w3, q0, s * n.x, s * n.y, s * n.z];
+            var s = Math.sin(0.5 * state.quaternion.q0 * Math.PI / 180);
+            this._state = [state.w1, state.w2, state.w3, q0, s * n.x, s * n.y, s * n.z];
         },
         enumerable: true,
         configurable: true
     });
     GyroDynamics.prototype.move = function (dt) {
         var _this = this;
-        this._x = Dynamics_1.Dynamics.runge(this._x, dt, function (v) { return _this.f(v); });
+        this._state = Dynamics_1.Dynamics.runge(this._state, dt, function (v) { return _this.f(v); });
     };
     return GyroDynamics;
 }());
