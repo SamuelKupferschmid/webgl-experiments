@@ -1,11 +1,12 @@
-import * as FragmentShader from '../shaders/main.frag';
-import * as VertexShader from '../shaders/main.vert';
+import * as FragmentShader from '../shaders/posColor.frag';
+import * as VertexShader from '../shaders/posColor.vert';
 import {BaseScene} from './BaseScene';
 import {ShaderProgram} from '../ShaderProgram';
 import {Mat4} from '../math/Mat4';
 import {Vec3} from '../math/Vec3';
 import {GyroDynamics} from '../GyroDynamics';
 import {ShapeBuilder} from '../ShapeBuilder';
+import {Quaternion} from '../math/Quaternion';
 
 export class FlyingCuboidsScene extends BaseScene {
 
@@ -16,19 +17,29 @@ export class FlyingCuboidsScene extends BaseScene {
     private b = new Vec3(0, 0, 2); // Look At
     private up = new Vec3(0, 1, 1); // up
 
-    private t = 0;
-    private dt = 0.000005;
+    private t = 0.001;
 
     private x = 0;
     private dx = 0.10;
 
     private dim = [1, 1, 1];
 
+    private startPositions = [
+        [0, 0, 0],
+        [2, 0, 0],
+        [0, 3, 2],
+        [-2, -2, 2]
+    ];
+
+    private dynamics = [
+        new GyroDynamics(0.2, 0.2, 0.2),
+        new GyroDynamics(0.2, 0.2, 0.2),
+        new GyroDynamics(0.2, 0.2, 0.2),
+        new GyroDynamics(0.2, 0.2, 0.2),
+    ];
+
     private translate = true;
     private rotate = true;
-
-
-    private gyro = new GyroDynamics(0.2, 0.2, 0.2);
 
     constructor(canvas: HTMLCanvasElement) {
         super(canvas);
@@ -47,7 +58,7 @@ export class FlyingCuboidsScene extends BaseScene {
         this._program.V = this.vMatrix;
         this._program.P = this.pMatrix;
 
-        this.resetMovement([1, 1, 1]);
+        this.resetMovement([0.4, 0.4, 0.4]);
 
         window.addEventListener('keypress', ev => this.keypress(ev));
     }
@@ -59,28 +70,29 @@ export class FlyingCuboidsScene extends BaseScene {
         gl.clearColor(0.0, 1.0, 0.0, 1.0);
         gl.enable(gl.DEPTH_TEST);
 
-        this._program.setColor(1, 0, 0, 1);
-
-        let state = this.gyro.state;
-
-        this.gyro.move(this.t);
+        this._program.setColor(0.4, 0.7, 0.1, 1);
 
         if (this.translate) {
             this.x += this.dx;
         }
 
-        if (this.rotate) {
-            this.t += this.dt;
+        for (let i = 0; i < this.startPositions.length; i++) {
+            let state = this.dynamics[i].state;
+
+            if (this.rotate) {
+                this.dynamics[i].move(this.t);
+            }
+
+            let m = Mat4.ID
+                .multiply(Mat4.translate(this.startPositions[i][0], this.startPositions[i][1], this.startPositions[i][1]))
+                .multiply(Mat4.scale(this.dim[0], this.dim[1], this.dim[2]))
+                .multiply(Mat4.translate(this.x, 0, 0))
+                .multiply(Mat4.rotate(state.quaternion.q0, state.quaternion.q1, state.quaternion.q2, state.quaternion.q3));
+
+            this._program.M = m;
+
+            gl.drawArrays(gl.TRIANGLES, 0, 36);
         }
-
-        let m = Mat4.ID
-            .multiply(Mat4.scale(this.dim[0], this.dim[1], this.dim[2]))
-            .multiply(Mat4.translate(this.x, 0, 0))
-            .multiply(Mat4.rotate(state.phi, state.x, state.y, state.z));
-
-        this._program.M = m;
-
-        gl.drawArrays(gl.TRIANGLES, 0, 36);
     }
 
     private keypress(ev: KeyboardEvent) {
@@ -95,10 +107,10 @@ export class FlyingCuboidsScene extends BaseScene {
                 this.resetMovement([0.4, 0.4, 0.4]);
                 break;
             case '2':
-                this.resetMovement([0.2, 1, 0.1]);
+                this.resetMovement([0.2, 0.7, 0.1]);
                 break;
             case '3':
-                this.resetMovement([1, 0.5, 2]);
+                this.resetMovement([0.7, 0.5, 1.2]);
                 break;
             case '4':
                 this.resetMovement([1, 0.4, 0.3]);
@@ -110,16 +122,15 @@ export class FlyingCuboidsScene extends BaseScene {
     private resetMovement(dimensions: number[]) {
         this.dim = dimensions;
         this.x = 0;
-        this.t = 0;
+        this.t = 0.001;
 
-        this.gyro.state = {
-            x: 1,
-            y: 1,
-            z: 1,
-            w1: Math.random() - 0.5,
-            w2: Math.random() - 0.5,
-            w3: Math.random() - 0.5,
-            phi: 1
-        };
+        for (let dyn of this.dynamics) {
+            dyn.state = {
+                w1: Math.random() - 0.5,
+                w2: Math.random() - 0.5,
+                w3: Math.random() - 0.5,
+                quaternion: new Quaternion(1, 1, 1, 1)
+            };
+        }
     }
 }

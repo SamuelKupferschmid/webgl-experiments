@@ -19,23 +19,8 @@ let scenes = {
     "Flying Cuboids": FlyingCuboidsScene
 };
 
-//let scene = new BoomerangScene(canvas);
 let scene;
 
-function toogleScene() {
-    if(scene != null)
-        scene.stop();
-
-    if(scene instanceof BoomerangScene) {
-        scene = new CylinderStreaming(canvas);
-    } else {
-        scene = new BoomerangScene(canvas);
-    }
-
-    scene.run((fps) => {
-        fpsLabel.innerText = fps.toFixed(0);
-    });
-}
 
 window.addEventListener('resize', () => {
     updateCanvasSize();
@@ -58,7 +43,7 @@ let onHashchange = (url: string) => {
 
     let match = url.match(/#(.*)/);
 
-    let type = match == null ? BoomerangScene : scenes[decodeURI(match[1])];
+    let type = match == null ? FlyingCuboidsScene : scenes[decodeURI(match[1])];
 
     scene = new type(canvas);
 
@@ -68,5 +53,7 @@ let onHashchange = (url: string) => {
 };
 
 window.addEventListener('hashchange', ev => {
-    onHashchange(ev.newURL);
+    onHashchange(document.location.href);
 });
+
+onHashchange("");
