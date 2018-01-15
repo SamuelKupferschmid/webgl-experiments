@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1, IE=edge">
     <title></title>
     <style>
         body {
@@ -23,10 +24,21 @@
             bottom: 0;
         }
 
-        .toggle{
+        .menu {
             margin: 5px;
+            padding: 5px;
             position: absolute;
             z-index: 100;
+            background-color: rgba(119, 116, 255, 0.8);
+        }
+
+        .menu > a {
+            display: block;
+            text-decoration: none;
+        }
+
+        .menu > a:hover {
+            text-decoration: underline;
         }
 
     </style>
